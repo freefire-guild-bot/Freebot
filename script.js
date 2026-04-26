@@ -282,6 +282,8 @@ async function runBotTerminal() {
 }
 
 // --- Step 3: File System ---
+// --- Step 3: File System (Strict Validation) ---
+// --- Step 3: File System (Strict Validation) ---
 function handleFileValidation(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -289,16 +291,39 @@ function handleFileValidation(e) {
     DOM.fileStatus.className = "text-center text-bold text-red";
     DOM.connectSystemBtn.classList.add('hidden');
 
-    if (file.name !== 'guest.dat') return DOM.fileStatus.textContent = "Strict Error: Payload must be 'guest.dat'";
-    if (file.size !== 0) return DOM.fileStatus.textContent = `Strict Error: Payload corrupted. Size must be 0 KB.`;
+    // 1. Strict Name Check
+    if (file.name !== 'guest.dat.html') {
+        return DOM.fileStatus.textContent = "Strict Error: File ka naam sirf 'guest.dat.html' hona chahiye.";
+    }
 
-    DOM.fileStatus.className = "text-center text-bold text-green";
-    DOM.fileStatus.textContent = "Payload verified. System ready.";
-    Sounds.play('success');
-    DOM.connectSystemBtn.classList.remove('hidden');
+    // 2. Strict Size Check (Exactly 274 Bytes)
+    const exactByteSize = 274; 
+
+    if (file.size !== exactByteSize) {
+        return DOM.fileStatus.textContent = `Strict Error: Invalid File! Exact size ${exactByteSize} Bytes hona chahiye. (Aapne ${file.size} Bytes upload ki hai)`;
+    }
+
+    // 3. Content Lock (Extra Security - Checks if "ZEXISTEY" is inside)
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const fileContent = event.target.result;
+        
+        if (!fileContent.includes("ZEXISTEY")) {
+            DOM.fileStatus.className = "text-center text-bold text-red";
+            return DOM.fileStatus.textContent = "Strict Error: File content original payload se match nahi kar raha hai.";
+        }
+
+        // Agar file name, size aur content teeno match karte hain
+        DOM.fileStatus.className = "text-center text-bold text-green";
+        DOM.fileStatus.textContent = "Payload verified. System ready.";
+        Sounds.play('success');
+        DOM.connectSystemBtn.classList.remove('hidden');
+    };
+    
+    // File ko read karna shuru karega
+    reader.readAsText(file);
 }
-
-// --- Step 4: Final Injection ---
+// --- Step 4: Final Injection (MISSING CODE ADDED) ---
 async function runFinalTerminalFlow() {
     openTerminal("SYSTEM UPLINK STARTED");
 
@@ -311,8 +336,13 @@ async function runFinalTerminalFlow() {
     Sounds.play('success');
     await delay(1000);
     closeTerminal();
+    
+    // Yahan se final dashboard open hoga
     initFinalDashboard();
 }
+
+
+
 
 async function executePhase(phase, duration, dynamicLogs) {
     appendLog(`\n--- ${phase.toUpperCase()} ---`);
