@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ZEXISTEY BOT™ | Advanced Control Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+      /* Header Logo (top bar) */
+.header-logo {
+    width: 38px !important;
+    height: 38px !important;
+    margin-right: 10px;
+    vertical-align: middle;
+    border-radius: 8px;
+    object-fit: cover;
+    animation: logoPulse 2s infinite alternate ease-in-out;
+}
+
+/* Scanner Logo (center box) */
+.scan-logo {
+    width: 70px !important;
+    height: 70px !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 12px;
+    object-fit: cover;
+    z-index: 10;
+    animation: scanBreath 1.5s infinite alternate ease-in-out;
+}
+
+/* Header animation */
+@keyframes logoPulse {
+    0% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 2px #fcd53f);
+    }
+    100% {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 10px #fcd53f);
+    }
+}
+
+/* Scanner animation FIXED */
+@keyframes scanBreath {
+    0% {
+        transform: translate(-50%, -50%) scale(0.95);
+        filter: drop-shadow(0 0 4px #fcd53f);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.08);
+        filter: drop-shadow(0 0 15px #fcd53f);
+    }
+}
+    </style>
+</head>
+<body>
+    <audio id="snd-click" preload="none" src="https://actions.google.com/sounds/v1/ui/button_click.ogg"></audio>
+    <audio id="snd-success" preload="none" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flick.ogg"></audio>
+    <audio id="snd-error" preload="none" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+    <audio id="snd-type" preload="none" src="https://actions.google.com/sounds/v1/office/keyboard_typing_fast.ogg"></audio>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <div id="loading-overlay" class="overlay hidden">
+        <div class="loader-box">
+            <div class="scanner-container">
+                <img src="https://i.ibb.co/8LHzzVLj/image-name.png" alt="ZEXI Logo" class="scan-logo">
+                <div class="scanner-line"></div>
+            </div>
+            <div class="loader-text pulse-text mt-20">FETCHING REAL DATA...</div>
+        </div>
+    </div>
+
+    <div id="terminal-overlay" class="overlay hidden">
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <span class="term-title">ROOT_ACCESS // TERMINAL</span>
+                <span class="term-status" id="term-status">PROCESSING</span>
+            </div>
+            <div class="terminal-body" id="terminal-body"></div>
+        </div>
+    </div>
+
+    <div id="intro-view" class="screen view-active flex-center">
+        <div class="intro-content">
+            <h1 class="brand-text">ZEXISTEY BOT</h1>
+            <p class="intro-sub pulse-text">Connecting to Game Servers...</p>
+            <div class="progress-bar-container mt-20">
+                <div class="progress-fill-intro"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-app" class="screen view-hidden flex-col">
+        
+        <header class="app-header">
+            <div class="logo">
+                <img src="https://i.ibb.co/8LHzzVLj/image-name.png" alt="ZEXI" class="header-logo">
+                ZEXI <span>STEY</span>
+            </div>
+            <div class="status-indicator">STATUS: <span class="text-green pulse">ONLINE</span></div>
+        </header>
+
+        <main class="app-content flex-grow">
+            
+            <div class="tagline-container">
+                <span class="tagline-text">[ SECURE CONNECTION ESTABLISHED ]</span>
+            </div>
+
+            <section id="target-view" class="view view-active">
+                <div class="premium-card">
+                    <h2 class="card-title text-gold">TARGET ACQUISITION</h2>
+                    <p class="card-desc">Enter target identifiers to establish uplink.</p>
+                    
+                    <form id="target-form" class="mt-20">
+                        <div class="input-group">
+                            <label>Player UID <span class="text-red">*</span></label>
+                            <input type="text" id="uid-input" placeholder="Numeric UID Only" autocomplete="off" required>
+                            <div class="input-error-space"></div> 
+                        </div>
+                        <div class="input-group">
+                            <label>Guild UID <span class="text-muted"></span></label>
+                            <input type="text" id="guild-input" placeholder="Guild ID" autocomplete="off" required>
+                            <div class="input-error-space"></div>
+                        </div>
+                        <div class="input-group">
+                            <label>Server Region</label>
+                            <select id="region-select">
+                                <option value="IND">India (IND)</option>
+                                <option value="BD">Bangladesh (BD)</option>
+                                <option value="PK">Pakistan (PK)</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-primary mt-20 ripple-btn snd-trigger">START SCAN</button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="bot-view" class="view view-hidden">
+                <div class="bot-container-neon">
+                    <h2 class="text-center text-neon-red mb-20 bot-title">Select Bot</h2>
+                    
+                    <div class="bot-grid">
+                        <div class="bot-card-exact selected snd-trigger" data-bot="ULTRA">
+                            <div class="bot-head-exact">
+                                <h3>🤖 ZEXI ULTRA <span class="badge badge-yellow">REC</span></h3>
+                            </div>
+                            <div class="bot-stats-exact">⚡ Power: 500+</div>
+                            <div class="sr-container">
+                                <div class="sr-bar-bg"><div class="sr-bar-fill bg-green" style="width: 95%;"></div></div>
+                                <div class="sr-text text-muted mt-5">95% Success</div>
+                            </div>
+                            <div class="bot-status-exact mt-10"><span class="dot bg-green"></span> ONLINE</div>
+                        </div>
+
+                        <div class="bot-card-exact snd-trigger" data-bot="VIP">
+                            <div class="bot-head-exact">
+                                <h3>🤖 ZEXI VIP</h3>
+                            </div>
+                            <div class="bot-stats-exact text-gold">⚡ Power: 300+</div>
+                            <div class="sr-container">
+                                <div class="sr-bar-bg"><div class="sr-bar-fill bg-gold" style="width: 85%;"></div></div>
+                                <div class="sr-text text-gold mt-5">85% Success</div>
+                            </div>
+                            <div class="bot-status-exact mt-10 text-green"><span class="dot bg-green"></span> ONLINE</div>
+                        </div>
+
+                        <div class="bot-card-exact snd-trigger" data-bot="PRO">
+                            <div class="bot-head-exact">
+                                <h3>🤖 ZEXI PRO</h3>
+                            </div>
+                            <div class="bot-stats-exact text-blue">⚡ Power: 200+</div>
+                            <div class="sr-container">
+                                <div class="sr-bar-bg"><div class="sr-bar-fill bg-blue" style="width: 80%;"></div></div>
+                                <div class="sr-text text-blue mt-5">80% Success</div>
+                            </div>
+                            <div class="bot-status-exact mt-10 text-green"><span class="dot bg-green"></span> ONLINE</div>
+                        </div>
+
+                        <div class="bot-card-exact snd-trigger" data-bot="CUSTOM">
+                            <div class="bot-head-exact">
+                                <h3>⚙️ ZEXI CUSTOM</h3>
+                            </div>
+                            <div class="bot-stats-exact text-muted">⚡ Power: Variable</div>
+                            <div class="sr-container">
+                                <div class="sr-bar-bg"><div class="sr-bar-fill bg-red" style="width: 60%;"></div></div>
+                                <div class="sr-text text-red mt-5">Dynamic Rate</div>
+                            </div>
+                            <div class="bot-status-exact mt-10 text-yellow"><span class="dot bg-yellow"></span> ONLINE</div>
+                        </div>
+                    </div>
+
+                    <button id="start-bot-btn" class="btn-solid-red mt-20 ripple-btn snd-trigger">START BOT</button>
+                </div>
+            </section>
+
+            <section id="file-view" class="view view-hidden">
+                <div class="premium-card">
+                    <h2 class="card-title text-gold">SYSTEM INJECTION</h2>
+                    <p class="card-desc">Upload required configuration matrix.</p>
+
+                    <div class="upload-zone mt-20 snd-trigger" id="drop-zone">
+                        <input type="file" id="file-input" accept=".dat" hidden>
+                        <div class="upload-content">
+                            <div class="upload-icon">📂</div>
+                            <h3>Select Payload</h3>
+                            <p>Required: <strong>guest.dat</strong> | Size: <strong>0 KB ONLY</strong></p>
+                        </div>
+                    </div>
+                    
+                    <div class="file-status-wrapper">
+                        <div id="file-status" class="text-center text-bold"></div>
+                    </div>
+
+                    <button id="connect-system-btn" class="btn-primary mt-10 hidden ripple-btn snd-trigger">CONNECT SYSTEM</button>
+                </div>
+            </section>
+
+            <section id="final-view" class="view view-hidden">
+                
+                <h1 class="congrats-title text-center mb-20">🎉 CONGRATULATIONS</h1>
+                
+                <div class="dashboard-card guild-card">
+                    <div class="card-header-flex border-bottom pb-10">
+                        <div class="guild-badge">
+                            <div class="avatar">🐺</div>
+                            <div class="level-badge" id="res-level"></div>
+                        </div>
+                        <div class="guild-titles">
+                            <h2 class="text-gold" id="res-name"></h2>
+                            <p class="text-muted text-mono text-xs">ID: <span id="res-guild-id"></span> | <span id="res-region"></span> | <span class="text-blue">BOTS ACTIVE</span></p>
+                        </div>
+                    </div>
+                    <div class="guild-stats mt-20">
+                        <div class="stat">
+                            <span class="label">👥 MEMBERS</span>
+                            <span class="value" id="res-members"></span>
+                        </div>
+                        <div class="stat">
+                            <span class="label">✨ CAPTAIN</span>
+                            <span class="value text-gold text-mono text-sm" id="res-captain"></span>
+                        </div>
+                        <div class="stat text-right">
+                            <span class="label text-gold">👑 TOTAL GLORY</span>
+                            <span class="value text-green text-lg" id="res-total-glory"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card bot-card mt-20 relative">
+                    <div class="watermark-tag">[ LIVE SYNC ENABLED ]</div>
+
+                    <div class="card-header-flex border-bottom pb-10 mt-10">
+                        <div class="bot-icon">🛡️</div>
+                        <div class="bot-titles">
+                            <p class="text-mono text-muted text-sm">ID: <span class="text-white text-bold" id="res-uid"></span></p>
+                            <p class="text-muted text-xs mt-5">👤 Clan: <span id="res-bot-clan"></span> <span class="ml-10">📍 <span id="res-bot-region"></span></span></p>
+                        </div>
+                        <div id="run-status-badge" class="status-badge bg-green-dim text-green">
+                            <span class="dot bg-green pulse" id="run-status-dot"></span> <span id="run-status-text">RUNNING</span>
+                        </div>
+                    </div>
+
+                    <div class="bot-metrics mt-20">
+                        <div class="metric"><span class="text-muted text-xs">🕒 Uptime</span> <span class="text-white text-bold ml-10 text-sm" id="uptime-timer"></span></div>
+                        <div class="metric"><span class="text-muted text-xs">⭐ Glory</span> <span class="text-white text-bold ml-10 text-sm" id="res-glory-pts"></span></div>
+                        <div class="metric text-right flex-grow"><span class="text-green text-bold text-sm" id="glory-rate">+1000/3m</span></div>
+                    </div>
+
+                    <div class="progress-box mt-20">
+                        <div class="flex-between text-xs text-bold"><span class="text-muted" id="goal-status-text">8H MAX GOAL</span> <span class="text-gold" id="goal-pct">0.00%</span></div>
+                        <div class="progress-track mt-5"><div class="progress-fill bg-gold" id="goal-progress-bar" style="width: 0%;"></div></div>
+                    </div>
+
+                    <div class="action-grid mt-20">
+                        <button class="btn-action btn-stop ripple-btn snd-trigger" id="btn-toggle-play">⏹ STOP</button>
+                        <button class="btn-action btn-details ripple-btn snd-trigger" id="btn-details">ℹ DETAILS</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <div class="fixed-bottom-bar">
+            <div class="social-grid">
+                <a href="https://youtube.com/@zexistey" target="_blank" class="btn-social btn-yt ripple-btn snd-trigger">▶ YOUTUBE</a>
+                <a href="https://t.me/Realzexi" target="_blank" class="btn-social btn-tg ripple-btn snd-trigger">✈ TELEGRAM</a>
+            </div>
+            <footer class="app-footer">Created by <strong>ZEXI TOOL</strong> | ZEXISTEY</footer>
+        </div>
+    </div>
+
+    <div id="details-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="text-gold">Group Glory Details</h2>
+                <button class="close-btn ripple-btn snd-trigger" id="close-modal">✖</button>
+            </div>
+            
+            <div class="warning-banner mt-10">
+                ⚠️ Live sync enabled. Glory increments dynamically every 3 minutes.
+            </div>
+
+            <div class="flex-between mt-20 align-center border-bottom pb-10">
+                <span class="text-muted text-bold">Live Session Glory</span>
+                <span class="text-white text-lg text-bold" id="modal-total-glory">0</span>
+            </div>
+
+            <div class="table-container mt-10">
+                <table class="glory-table">
+                    <thead>
+                        <tr>
+                            <th>ACCOUNT ID</th>
+                            <th>NICKNAME</th>
+                            <th>LVL</th>
+                            <th>LIKES</th>
+                            <th>GLORY</th>
+                        </tr>
+                    </thead>
+                    <tbody id="player-table-body">
+                        </tbody>
+                </table>
+            </div>
+
+            <div class="board-section mt-20">
+                <h3 class="text-gold mb-10 text-center">Select Action Board</h3>
+                <div class="board-grid">
+                    <div class="board-item interactive snd-trigger" data-board="Alpha Core">
+                        <h4>Alpha Core</h4><span class="badge badge-green">LIVE</span>
+                    </div>
+                    <div class="board-item interactive snd-trigger" data-board="Nexus Relay">
+                        <h4>Nexus Relay</h4><span class="badge badge-green">LIVE</span>
+                    </div>
+                    <div class="board-item disabled" data-board="Phantom Grid">
+                        <h4>Phantom Grid</h4><span class="badge badge-red">BUSY</span>
+                    </div>
+                    <div class="board-item interactive snd-trigger" data-board="Shadow Node">
+                        <h4>Shadow Node</h4><span class="badge badge-green">LIVE</span>
+                    </div>
+                </div>
+                <button id="start-action-btn" class="btn-primary mt-20 disabled-btn ripple-btn snd-trigger" disabled>START ACTION</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
