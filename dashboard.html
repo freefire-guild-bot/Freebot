@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ZEXISTEY BOT™ | Advanced Control Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="cyber-bg"></div>
+    <div class="scanlines-overlay"></div>
+
+    <audio id="snd-click" preload="auto" src="https://actions.google.com/sounds/v1/ui/button_click.ogg"></audio>
+    <audio id="snd-success" preload="auto" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flick.ogg"></audio>
+    <audio id="snd-error" preload="auto" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+    <audio id="snd-type" preload="auto" src="https://actions.google.com/sounds/v1/office/keyboard_typing_fast.ogg"></audio>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <div id="loading-overlay" class="overlay hidden">
+        <div class="loader-box tech-border">
+            <div class="scanner-container code-scanner crt-screen">
+                <div class="code-stream text-mono">
+                    <div>> SYS_INIT()...</div>
+                    <div>> BYPASSING_FIREWALL...</div>
+                    <div>> INJECTING_ZEXI_PAYLOAD...</div>
+                    <div>> OVERRIDING_SYS...</div>
+                    <div>> DECRYPTING_DATA...</div>
+                    <div>> UPLINK_ESTABLISHED</div>
+                </div>
+                <div class="scanner-line"></div>
+            </div>
+            <div class="loader-text pulse-text mt-20">ESTABLISHING UPLINK...</div>
+        </div>
+    </div>
+
+    <div id="terminal-overlay" class="overlay hidden">
+        <div class="terminal-window crt-screen">
+            <div class="terminal-header flex-between">
+                <span class="term-title">SYS_ROOT // ZEXISTEY_PROTOCOL</span>
+                <span class="term-status" id="term-status">EXECUTING</span>
+            </div>
+            <div class="terminal-body" id="terminal-body"></div>
+        </div>
+    </div>
+
+    <div id="intro-view" class="screen view-active flex-center">
+        <div class="intro-content">
+            <div class="glitch-wrapper">
+                <h1 class="brand-text glitch" data-text="ZEXISTEY BOT">ZEXISTEY BOT</h1>
+            </div>
+            <p class="intro-sub text-mono pulse-text">[ SYSTEM INITIALIZATION ]</p>
+            <div class="progress-bar-container mt-20">
+                <div class="progress-fill-intro"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-app" class="screen view-hidden flex-col">
+        <header class="app-header tech-panel">
+            <div class="logo flex-center">
+                <img src="https://i.ibb.co/8LHzzVLj/image-name.png" alt="ZEXI" class="header-logo">
+                <div class="brand-name">ZEXI<span class="text-gold">STEY</span></div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                <div class="milestone-badge mb-10">🏆 28K+ BROTHERS</div>
+                <div class="status-indicator tech-text">NET: <span class="text-green pulse ml-5">SECURE</span></div>
+            </div>
+        </header>
+
+        <main class="app-content flex-grow">
+            <div class="tagline-container">
+                <span class="tagline-text glitch-sub">>> CONNECTION_STABLE // READY</span>
+            </div>
+
+            <section id="target-view" class="view view-active">
+                <div class="premium-card hud-card interactive-tilt">
+                    <div class="hud-corner top-left"></div>
+                    <div class="hud-corner bottom-right"></div>
+                    <h2 class="card-title text-gold tech-heading">TARGET ACQUISITION</h2>
+                    <p class="card-desc text-mono text-xs">Enter encrypted identifiers to establish sync.</p>
+                    
+                    <form id="target-form" class="mt-20">
+                        <div class="input-group">
+                            <label>PLAYER UID <span class="text-red">*</span></label>
+                            <input type="text" id="uid-input" placeholder="0000000000" autocomplete="off" required class="tech-input">
+                            <div class="input-error-space"></div> 
+                        </div>
+                        <div class="input-group">
+                            <label>GUILD UID <span class="text-muted"></span></label>
+                            <input type="text" id="guild-input" placeholder="Enter Guild ID" autocomplete="off" required class="tech-input">
+                            <div class="input-error-space"></div>
+                        </div>
+                        <div class="input-group">
+                            <label>SERVER REGION</label>
+                            <select id="region-select" class="tech-input">
+                                <option value="IND">INDIA [IND-CORE]</option>
+                                <option value="BD">BANGLADESH [BD-NODE]</option>
+                                <option value="PK">PAKISTAN [PK-NODE]</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-primary mt-20 ripple-btn snd-trigger cyber-btn">
+                            <span class="btn-text">INITIATE SCAN</span>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <section id="bot-view" class="view view-hidden">
+                <div class="bot-container-neon hud-card interactive-tilt">
+                    <h2 class="text-center text-neon-red mb-20 bot-title tech-heading">SELECT OVERRIDE BOT</h2>
+                    <div class="bot-grid">
+                        <div class="bot-card-exact selected snd-trigger hud-sub-card" data-bot="ULTRA">
+                            <div class="bot-head-exact"><h3>ZEXI ULTRA</h3> <span class="badge badge-yellow">MAX</span></div>
+                            <div class="bot-stats-exact text-mono text-xs text-white">PWR: 500+ THREADS</div>
+                            <div class="sr-container"><div class="sr-bar-bg"><div class="sr-bar-fill bg-green" style="width: 95%;"></div></div><div class="sr-text text-muted mt-5">95% SYNC RATE</div></div>
+                            <div class="bot-status-exact mt-10"><span class="dot bg-green pulse"></span> ACTIVE</div>
+                        </div>
+                        <div class="bot-card-exact snd-trigger hud-sub-card" data-bot="VIP">
+                            <div class="bot-head-exact"><h3>ZEXI VIP</h3></div>
+                            <div class="bot-stats-exact text-mono text-xs text-gold">PWR: 300+ THREADS</div>
+                            <div class="sr-container"><div class="sr-bar-bg"><div class="sr-bar-fill bg-gold" style="width: 85%;"></div></div><div class="sr-text text-gold mt-5">85% SYNC RATE</div></div>
+                            <div class="bot-status-exact mt-10 text-green"><span class="dot bg-green pulse"></span> ACTIVE</div>
+                        </div>
+                        <div class="bot-card-exact snd-trigger hud-sub-card" data-bot="PRO">
+                            <div class="bot-head-exact"><h3>ZEXI PRO</h3></div>
+                            <div class="bot-stats-exact text-mono text-xs text-blue">PWR: 200+ THREADS</div>
+                            <div class="sr-container"><div class="sr-bar-bg"><div class="sr-bar-fill bg-blue" style="width: 80%;"></div></div><div class="sr-text text-blue mt-5">80% SYNC RATE</div></div>
+                            <div class="bot-status-exact mt-10 text-green"><span class="dot bg-green pulse"></span> ACTIVE</div>
+                        </div>
+                        <div class="bot-card-exact snd-trigger hud-sub-card" data-bot="CUSTOM">
+                            <div class="bot-head-exact"><h3>ZEXI CUSTOM</h3></div>
+                            <div class="bot-stats-exact text-mono text-xs text-muted">PWR: VARIABLE</div>
+                            <div class="sr-container"><div class="sr-bar-bg"><div class="sr-bar-fill bg-red" style="width: 60%;"></div></div><div class="sr-text text-red mt-5">DYNAMIC</div></div>
+                            <div class="bot-status-exact mt-10 text-yellow"><span class="dot bg-yellow pulse"></span> ACTIVE</div>
+                        </div>
+                    </div>
+                    <button id="start-bot-btn" class="btn-solid-red mt-20 ripple-btn snd-trigger cyber-btn-red">
+                        <span class="btn-text">DEPLOY BOT</span>
+                    </button>
+                </div>
+            </section>
+
+            <section id="file-view" class="view view-hidden">
+                <div class="premium-card hud-card interactive-tilt">
+                    <h2 class="card-title text-gold tech-heading">PAYLOAD INJECTION</h2>
+                    <p class="card-desc text-mono text-xs">Inject config matrix to bypass security.</p>
+                    <div class="upload-zone mt-20 snd-trigger tech-dropzone" id="drop-zone">
+                        <input type="file" id="file-input" accept=".dat" hidden>
+                        <div class="upload-content">
+                            <div class="upload-icon pulse-text">🧬</div>
+                            <h3 class="text-mono">SELECT PAYLOAD</h3>
+                            <p class="text-xs">REQ: <span class="text-gold">guest.dat</span> | SIZE: <span class="text-red">0 KB</span></p>
+                        </div>
+                    </div>
+                    <div class="file-status-wrapper mt-10">
+                        <div id="file-status" class="text-center text-bold text-mono"></div>
+                    </div>
+                    <button id="connect-system-btn" class="btn-primary mt-10 hidden ripple-btn snd-trigger cyber-btn">
+                        <span class="btn-text">ESTABLISH LINK</span>
+                    </button>
+                </div>
+            </section>
+
+            <section id="final-view" class="view view-hidden">
+                <div class="glitch-wrapper mb-20 text-center">
+                    <h1 class="congrats-title tech-heading text-green">UPLINK SUCCESSFUL</h1>
+                </div>
+                
+                <div class="dashboard-card guild-card hud-card interactive-tilt">
+                    <div class="card-header-flex border-bottom pb-10">
+                        <div class="guild-badge cyber-box"><div class="avatar">🐺</div><div class="level-badge" id="res-level"></div></div>
+                        <div class="guild-titles">
+                            <h2 class="text-gold tech-heading" id="res-name"></h2>
+                            <p class="text-muted text-mono text-xs">ID: <span id="res-guild-id" class="text-white"></span> | <span id="res-region" class="text-blue"></span></p>
+                        </div>
+                    </div>
+                    <div class="guild-stats mt-20">
+                        <div class="stat"><span class="label">MEMBERS</span><span class="value text-mono text-white" id="res-members"></span></div>
+                        <div class="stat"><span class="label">CAPTAIN</span><span class="value text-gold text-mono text-sm" id="res-captain"></span></div>
+                        <div class="stat text-right"><span class="label text-gold">TOTAL GLORY</span><span class="value text-green text-lg text-mono" id="res-total-glory"></span></div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card bot-card mt-20 relative hud-card interactive-tilt">
+                    <div class="watermark-tag">[ LIVE SYNC: ENGAGED ]</div>
+                    <div class="card-header-flex border-bottom pb-10 mt-10">
+                        <div class="bot-icon cyber-box text-blue">🛡️</div>
+                        <div class="bot-titles">
+                            <p class="text-mono text-muted text-xs">TARGET UID: <span class="text-white text-bold" id="res-uid"></span></p>
+                            <p class="text-muted text-xs mt-5">CLAN: <span id="res-bot-clan" class="text-white"></span> <span class="ml-10">LOC: <span id="res-bot-region" class="text-white"></span></span></p>
+                        </div>
+                        <div id="run-status-badge" class="status-badge bg-green-dim text-green tech-border-sm">
+                            <span class="dot bg-green pulse" id="run-status-dot"></span> <span id="run-status-text" class="text-mono">RUNNING</span>
+                        </div>
+                    </div>
+                    <div class="bot-metrics mt-20 text-mono">
+                        <div class="metric"><span class="text-muted text-xs">UPTIME:</span> <span class="text-white text-bold ml-5 text-sm" id="uptime-timer"></span></div>
+                        <div class="metric"><span class="text-muted text-xs">GLORY:</span> <span class="text-gold text-bold ml-5 text-sm" id="res-glory-pts"></span></div>
+                        <div class="metric text-right flex-grow"><span class="text-green text-bold text-sm" id="glory-rate">+1000/3m</span></div>
+                    </div>
+                    <div class="progress-box mt-20">
+                        <div class="flex-between text-xs text-bold text-mono mb-5"><span class="text-muted" id="goal-status-text">CYCLE LIMIT</span> <span class="text-gold" id="goal-pct">0.00%</span></div>
+                        <div class="progress-track"><div class="progress-fill bg-gold" id="goal-progress-bar" style="width: 0%;"></div></div>
+                    </div>
+                    <div class="action-grid mt-20">
+                        <button class="btn-action btn-stop ripple-btn snd-trigger cyber-btn-outline-red" id="btn-toggle-play">ABORT</button>
+                        <button class="btn-action btn-details ripple-btn snd-trigger cyber-btn-outline" id="btn-details">LOGS</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div class="fixed-bottom-bar tech-panel">
+            <div class="social-grid">
+                <a href="https://youtube.com/@zexistey" target="_blank" class="btn-social btn-yt ripple-btn snd-trigger cyber-btn-social">▶ YOUTUBE</a>
+                <a href="https://t.me/Realzexi" target="_blank" class="btn-social btn-tg ripple-btn snd-trigger cyber-btn-social">✈ TELEGRAM</a>
+            </div>
+            <footer class="app-footer text-mono mt-15 text-xs">SYSTEM BY <strong class="text-gold">ZEXI TOOL</strong> | PROPERTY OF ZEXISTEY</footer>
+        </div>
+    </div>
+
+    <div id="details-modal" class="modal-overlay hidden">
+        <div class="modal-content hud-card">
+            <div class="modal-header">
+                <h2 class="text-gold tech-heading">SYNC LOGS</h2>
+                <button class="close-btn ripple-btn snd-trigger tech-border-sm" id="close-modal">✖</button>
+            </div>
+            <div class="warning-banner mt-10 text-mono text-xs">>> LIVE_SYNC_ACTIVE: DATA AUTO-REFRESHING</div>
+            <div class="flex-between mt-20 align-center border-bottom pb-10">
+                <span class="text-muted text-bold text-mono">SESSION YIELD</span>
+                <span class="text-green text-lg text-bold text-mono" id="modal-total-glory">0</span>
+            </div>
+            <div class="table-container mt-10">
+                <table class="glory-table text-mono">
+                    <thead><tr><th>UID</th><th>ALIAS</th><th>LVL</th><th>LIKES</th><th>GLORY</th></tr></thead>
+                    <tbody id="player-table-body"></tbody>
+                </table>
+            </div>
+            <div class="board-section mt-20">
+                <h3 class="text-gold mb-10 text-center tech-heading text-sm">SELECT ROUTING NODE</h3>
+                <div class="board-grid">
+                    <div class="board-item interactive snd-trigger hud-sub-card" data-board="Alpha Core"><h4>Alpha Node</h4><span class="badge badge-green">UP</span></div>
+                    <div class="board-item interactive snd-trigger hud-sub-card" data-board="Nexus Relay"><h4>Nexus Relay</h4><span class="badge badge-green">UP</span></div>
+                    <div class="board-item disabled hud-sub-card" data-board="Phantom Grid"><h4>Phantom Grid</h4><span class="badge badge-red">ERR</span></div>
+                    <div class="board-item interactive snd-trigger hud-sub-card" data-board="Shadow Node"><h4>Shadow Core</h4><span class="badge badge-green">UP</span></div>
+                </div>
+                <button id="start-action-btn" class="btn-primary mt-20 disabled-btn ripple-btn snd-trigger cyber-btn" disabled><span class="btn-text">REROUTE</span></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="popup-yt" class="social-glass-overlay">
+        <div class="social-premium-card hud-card interactive-tilt theme-yt">
+            <button class="social-close-btn tech-border-sm">&times;</button>
+            <div class="social-icon-ring pulse-ring">▶</div>
+            <h2 class="social-title text-white tech-heading">SUBSCRIBE ZEXISTEY</h2>
+            <p class="social-subtitle text-muted text-mono text-xs">UNLOCK ADVANCED BOTS</p>
+            <div class="social-benefits text-mono">
+                <div class="social-benefit-item"><span class="social-check text-red">>></span> <span class="social-text">FREE CONFIGS</span></div>
+                <div class="social-benefit-item"><span class="social-check text-red">>></span> <span class="social-text">HACKING TUTORIALS</span></div>
+            </div>
+            <a href="https://youtube.com/@zexistey" target="_blank" class="social-cta-btn ripple-btn snd-trigger cyber-btn-red"><span class="btn-text">SUBSCRIBE NOW</span></a>
+        </div>
+    </div>
+
+    <div id="popup-tg" class="social-glass-overlay">
+        <div class="social-premium-card hud-card interactive-tilt theme-tg">
+            <button class="social-close-btn tech-border-sm">&times;</button>
+            <div class="social-icon-ring pulse-ring">✈</div>
+            <h2 class="social-title text-white tech-heading">JOIN TELEGRAM</h2>
+            <p class="social-subtitle text-muted text-mono text-xs">GET LATEST PAYLOAD FILES</p>
+            <div class="social-benefits text-mono">
+                <div class="social-benefit-item"><span class="social-check text-blue">>></span> <span class="social-text">NEW GUEST.DAT</span></div>
+                <div class="social-benefit-item"><span class="social-check text-blue">>></span> <span class="social-text">ANTI-BAN UPDATES</span></div>
+            </div>
+            <a href="https://t.me/Realzexi" target="_blank" class="social-cta-btn ripple-btn snd-trigger cyber-btn"><span class="btn-text">JOIN CHANNEL</span></a>
+        </div>
+    </div>
+
+    <div id="popup-wa" class="social-glass-overlay">
+        <div class="social-premium-card hud-card interactive-tilt theme-wa">
+            <button class="social-close-btn tech-border-sm">&times;</button>
+            <div class="social-icon-ring pulse-ring">💬</div>
+            <h2 class="social-title text-white tech-heading">JOIN WHATSAPP</h2>
+            <p class="social-subtitle text-muted text-mono text-xs">ELITE BROTHERS NETWORK</p>
+            <div class="social-benefits text-mono">
+                <div class="social-benefit-item"><span class="social-check text-green">>></span> <span class="social-text">VIP SUPPORT</span></div>
+                <div class="social-benefit-item"><span class="social-check text-green">>></span> <span class="social-text">FASTEST ALERTS</span></div>
+            </div>
+            <a href="https://whatsapp.com/channel/0029Vb6cxpWHVvTY8ZY5yy45" target="_blank" class="social-cta-btn ripple-btn snd-trigger cyber-btn-green"><span class="btn-text">JOIN WHATSAPP</span></a>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- 1. Sound Trigger Fix (Fast Playback) ---
+        document.querySelectorAll('.snd-trigger').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const clickSound = document.getElementById('snd-click');
+                if(clickSound) {
+                    clickSound.currentTime = 0;
+                    clickSound.play().catch(e => console.log('Sound blocked'));
+                }
+            });
+        });
+
+        // --- 2. 3 Dynamic Popups Logic (GLITCH & TIMING FIXED) ---
+        const views = {
+            yt: document.getElementById('bot-view'),
+            tg: document.getElementById('file-view'),
+            wa: document.getElementById('final-view')
+        };
+        
+        const popups = {
+            yt: document.getElementById('popup-yt'),
+            tg: document.getElementById('popup-tg'),
+            wa: document.getElementById('popup-wa')
+        };
+
+        // Smooth Close Function to prevent snapping
+        const closePopup = (popup) => {
+            popup.classList.remove('is-visible');
+            setTimeout(() => { popup.style.display = 'none'; }, 400); 
+        };
+
+        document.querySelectorAll('.social-close-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                closePopup(e.target.closest('.social-glass-overlay'));
+            });
+        });
+
+        Object.values(popups).forEach(popup => {
+            popup.addEventListener('click', (e) => {
+                if (e.target === popup) closePopup(popup);
+            });
+        });
+
+        const triggerPopup = (popupId, storageKey) => {
+            // Check if already triggered or currently queued
+            if (!sessionStorage.getItem(storageKey)) {
+                // Instantly lock it so MutationObserver doesn't double-fire
+                sessionStorage.setItem(storageKey, 'pending'); 
+                
+                // 2.5 seconds exact delay so it waits for the loading scanner to disappear
+                setTimeout(() => {
+                    const popup = popups[popupId];
+                    if(popup) {
+                        popup.style.display = 'flex';
+                        
+                        // requestAnimationFrame fixes the CSS transition glitch
+                        requestAnimationFrame(() => {
+                            requestAnimationFrame(() => {
+                                popup.classList.add('is-visible');
+                            });
+                        });
+                        
+                        sessionStorage.setItem(storageKey, 'true'); // Final checkmark
+                        
+                        const sndSuccess = document.getElementById('snd-success');
+                        if(sndSuccess) { sndSuccess.currentTime = 0; sndSuccess.play().catch(e=>{}); }
+                        if(navigator.vibrate) navigator.vibrate([100, 50, 100]); 
+                    }
+                }, 2500);
+            }
+        };
+
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'class') {
+                    if (views.yt && views.yt.classList.contains('view-active')) triggerPopup('yt', 'zexi_yt_shown');
+                    if (views.tg && views.tg.classList.contains('view-active')) triggerPopup('tg', 'zexi_tg_shown');
+                    if (views.wa && views.wa.classList.contains('view-active')) triggerPopup('wa', 'zexi_wa_shown');
+                }
+            });
+        });
+
+        if(views.yt) observer.observe(views.yt, { attributes: true });
+        if(views.tg) observer.observe(views.tg, { attributes: true });
+        if(views.wa) observer.observe(views.wa, { attributes: true });
+
+        // --- 3. 3D Hover Tilt Effect ---
+        const tiltCards = document.querySelectorAll('.interactive-tilt');
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -3; 
+                const rotateY = ((x - centerX) / centerX) * 3;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
+                card.style.transition = 'none';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                card.style.transition = 'transform 0.5s ease';
+            });
+        });
+    });
+    </script>
+</body>
+</html>
