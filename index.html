@@ -110,6 +110,7 @@
             transition: all 0.3s ease;
             clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
             overflow: hidden;
+            margin-bottom: 10px;
         }
 
         .btn-cyber:hover {
@@ -171,6 +172,11 @@
         ⚡ Initiate Hype Sequence
     </button>
 
+    <!-- Naya Button Jo 15 sec task ke baad aayega -->
+    <button class="btn-cyber hidden" id="fullVideoBtn" onclick="UnlockSystem.initiateFullVideo()">
+        🎥 Watch Full Video
+    </button>
+
     <div class="status-container">
         <div id="loader" class="loader"></div>
         <div id="statusText" class="msg-text"></div>
@@ -181,13 +187,16 @@
 const UnlockSystem = {
     config: {
         targetUrl: "dashboard.html",
-        hypeLink: "https://youtu.be/DWx7R8eh644?si=UpBzZQxIUwmplTum",
+        hypeLink: "https://youtu.be/DWx7R8eh644?si=UpBzZQxIUwmplTum", // 15 Second wala link
+        fullVideoLink: "https://youtu.be/Y1SQ3AjvyZ8", // <--- APNA DUSRA LINK YAHAN PASTE KAREIN
         requiredWaitSec: 15,
+        fullVideoWaitSec: 680, // 11 minutes 20 seconds (11 * 60 + 20)
         verificationSec: 5
     },
 
     elements: {
         btn: document.getElementById('hypeBtn'),
+        fullVideoBtn: document.getElementById('fullVideoBtn'),
         status: document.getElementById('statusText'),
         loader: document.getElementById('loader')
     },
@@ -198,34 +207,74 @@ const UnlockSystem = {
                 this.checkStatus();
             }
         });
+
+        // Agar user pehla step clear kar chuka hai but dusra pending hai
+        if (localStorage.getItem("step1Completed") === "true" && !localStorage.getItem("fullVideoInitTime")) {
+            this.elements.btn.classList.add('hidden');
+            this.elements.fullVideoBtn.classList.remove('hidden');
+            this.updateStatus("Part 1 Complete. Watch Full Video to Proceed.", "success");
+        }
+
         this.checkStatus();
     },
 
+    // Step 1: 15 seconds wala link
     initiateSequence() {
         localStorage.setItem("hypeInitTime", Date.now());
         this.updateStatus("Sequence initiated. Awaiting confirmation...", "verifying");
         window.open(this.config.hypeLink, "_blank");
     },
 
+    // Step 2: 11 Min 20 Sec wala link
+    initiateFullVideo() {
+        localStorage.setItem("fullVideoInitTime", Date.now());
+        this.updateStatus("Full Video check initiated. Awaiting confirmation...", "verifying");
+        window.open(this.config.fullVideoLink, "_blank"); // Yahan automatically dusra link open hoga
+    },
+
     checkStatus() {
-        const initTime = localStorage.getItem("hypeInitTime");
-        if (!initTime) return; // Agar click nahi kiya toh kuch mat karo
+        const fullVideoInitTime = localStorage.getItem("fullVideoInitTime");
+        const hypeInitTime = localStorage.getItem("hypeInitTime");
 
-        const timeElapsed = (Date.now() - initTime) / 1000;
+        // Check Phase 2 (11 Min 20 Sec)
+        if (fullVideoInitTime) {
+            const timeElapsed = (Date.now() - fullVideoInitTime) / 1000;
 
-        if (timeElapsed >= this.config.requiredWaitSec) {
-            // 15 sec pure ho gaye, successful redirect
-            localStorage.removeItem("hypeInitTime");
-            this.startVerification();
-        } else {
-            // Agar jaldi aa gaya, toh timer delete NAHI karna hai
-            // Bas remaining time show kar do
-            let secondsLeft = Math.ceil(this.config.requiredWaitSec - timeElapsed);
-            this.updateStatus(`❌ Security Alert: Please wait ${secondsLeft} more seconds on the link!`, "error");
+            if (timeElapsed >= this.config.fullVideoWaitSec) {
+                // Time pura ho gaya
+                localStorage.removeItem("fullVideoInitTime");
+                localStorage.removeItem("step1Completed");
+                this.startFinalVerification();
+            } else {
+                // Agar jaldi wapas aaya
+                let secondsLeft = Math.ceil(this.config.fullVideoWaitSec - timeElapsed);
+                let mins = Math.floor(secondsLeft / 60);
+                let secs = secondsLeft % 60;
+                let timeLeftStr = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+                
+                this.updateStatus(`❌ Security Alert: Please watch for ${timeLeftStr} more!`, "error");
+            }
+            return; // Agar Phase 2 mein hai toh aage ka check band kar do
+        }
+
+        // Check Phase 1 (15 Sec)
+        if (hypeInitTime) {
+            const timeElapsed = (Date.now() - hypeInitTime) / 1000;
+
+            if (timeElapsed >= this.config.requiredWaitSec) {
+                // 15 sec pure ho gaye
+                localStorage.removeItem("hypeInitTime");
+                localStorage.setItem("step1Completed", "true");
+                this.startFirstVerification();
+            } else {
+                // Agar jaldi wapas aaya
+                let secondsLeft = Math.ceil(this.config.requiredWaitSec - timeElapsed);
+                this.updateStatus(`❌ Security Alert: Please wait ${secondsLeft} more seconds!`, "error");
+            }
         }
     },
 
-    startVerification() {
+    startFirstVerification() {
         this.elements.btn.classList.add('hidden');
         this.elements.loader.style.display = "block";
         
@@ -233,6 +282,27 @@ const UnlockSystem = {
 
         const countdown = setInterval(() => {
             this.updateStatus(`Bypassing firewall... [${timeLeft}s]`, "verifying");
+            timeLeft--;
+
+            if (timeLeft < 0) {
+                clearInterval(countdown);
+                this.elements.loader.style.display = "none";
+                this.updateStatus("Part 1 Complete. Watch Full Video to Proceed.", "success");
+                
+                // Dusra button dikhao
+                this.elements.fullVideoBtn.classList.remove('hidden');
+            }
+        }, 1000);
+    },
+
+    startFinalVerification() {
+        this.elements.fullVideoBtn.classList.add('hidden');
+        this.elements.loader.style.display = "block";
+        
+        let timeLeft = this.config.verificationSec;
+
+        const countdown = setInterval(() => {
+            this.updateStatus(`Decrypting final access... [${timeLeft}s]`, "verifying");
             timeLeft--;
 
             if (timeLeft < 0) {
