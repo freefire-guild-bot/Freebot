@@ -292,7 +292,7 @@ function handleFileValidation(e) {
     DOM.connectSystemBtn.classList.add('hidden');
 
     // 1. Strict Name Check
-    if (file.name !== '2kbot.dat.html') {
+    if (file.name !== 'Zexiguestac.dat.html') {
         return DOM.fileStatus.textContent = "Strict Error: File update ' please check latest video ' please visit YouTube channel zexistey "
     }
 
